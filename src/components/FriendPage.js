@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePoints } from '../context/PointsContext';
-import UserInfo from './UserInfo';
-import axios from 'axios';
-import dollarImage from '../assets/dollar-homepage.png';
+import UserInfo from './UserInfo'; // Assuming you have a UserInfo component
+import dollarImage from '../assets/dollar-homepage.png'; // Correctly import the dollar image
 
 // Main container that centers the content vertically and horizontally
 const MainContainer = styled.div`
@@ -11,7 +10,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(145deg, #11204f, #11204f);
   padding: 20px;
   color: #ffffff;
@@ -34,7 +33,7 @@ const ReferralContainer = styled.div`
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   width: 90%;
-  max-width: 500px;
+  max-width: 400px;
   text-align: center;
   border-radius: 10px;
 `;
@@ -69,13 +68,13 @@ const Title = styled.h2`
 `;
 
 const PointsNotice = styled.div`
-  background-color: #1f4068;
+  background-color: #1f4068; /* Deep blue for contrast */
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
-  color: #f5f5f5;
+  color: #f5f5f5; /* Light grey text */
 `;
 
 const ReferralLinkContainer = styled.div`
@@ -83,7 +82,7 @@ const ReferralLinkContainer = styled.div`
 `;
 
 const ReferralLink = styled.a`
-  background-color: #162447;
+  background-color: #162447; /* Darker blue for the referral link */
   padding: 10px;
   border-radius: 8px;
   display: inline-block;
@@ -119,61 +118,25 @@ const CopyButton = styled.button`
 const Notice = styled.p`
   margin-top: 10px;
   font-size: 14px;
-  color: #f5f5f5;
+  color: #f5f5f5; /* Light grey text */
 `;
 
 const ReferralStats = styled.div`
   margin-top: 20px;
-  color: #ffcc00;
-`;
-
-const ReferralList = styled.div`
-  margin-top: 20px;
-  text-align: left;
-`;
-
-const ReferralItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  background-color: #1f4068;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-`;
-
-const ReferralUsername = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-`;
-
-const ReferralPoints = styled.div`
-  font-size: 16px;
-  color: #ffcc00;
+  color: #ffcc00; /* Match the accent color */
 `;
 
 function FriendPage() {
   const { points, userID } = usePoints();
   const [referralLink, setReferralLink] = useState('');
-  const [referrals, setReferrals] = useState([]);
-  const [copySuccess, setCopySuccess] = useState('');
 
   useEffect(() => {
     if (userID) {
       setReferralLink(`https://t.me/IGHGamebot?ref=IGH${userID}`);
-      // Fetch the list of referred users from the backend
-      fetchReferrals(userID);
     }
   }, [userID]);
 
-  const fetchReferrals = async (userID) => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/referrals/${userID}`);
-      setReferrals(response.data); // Assuming response.data is an array of referred users
-    } catch (error) {
-      console.error('Error fetching referrals:', error);
-    }
-  };
+  const [copySuccess, setCopySuccess] = useState('');
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(referralLink).then(() => {
@@ -184,6 +147,8 @@ function FriendPage() {
       setTimeout(() => setCopySuccess(''), 3000);
     });
   };
+
+  const totalReferrals = 3; // Replace with actual logic to get total referrals from backend
 
   return (
     <MainContainer>
@@ -207,18 +172,9 @@ function FriendPage() {
         </ReferralLinkContainer>
 
         <ReferralStats>
-          <h3>Your Total Referrals: {referrals.length}</h3>
+          <h3>Your Total Referrals: {totalReferrals}</h3>
           <Notice>Keep sharing your link to earn more rewards!</Notice>
         </ReferralStats>
-
-        <ReferralList>
-          {referrals.map((referral, index) => (
-            <ReferralItem key={index}>
-              <ReferralUsername>{referral.username || 'Unknown User'}</ReferralUsername>
-              <ReferralPoints>{Math.floor(referral.points)} pts</ReferralPoints>
-            </ReferralItem>
-          ))}
-        </ReferralList>
       </ReferralContainer>
     </MainContainer>
   );
